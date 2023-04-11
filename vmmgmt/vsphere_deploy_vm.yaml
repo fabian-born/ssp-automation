@@ -73,7 +73,7 @@
   - name: "Create user accounts"
     user:
       name: "{{ username }}"
-      groups: "admin"
+      groups: "adm"
       shell: /bin/bash
 
 #  - name: "Add authorized keys"
@@ -86,5 +86,5 @@
     lineinfile:
       dest: "/etc/sudoers" # path: in version 2.3
       state: "present"
-      regexp: "^%admin"
-      line: "%admin ALL=(ALL) NOPASSWD: ALL"
+      regexp: "^%adm"
+      line: "%adm ALL=(ALL) NOPASSWD: ALL"

@@ -96,3 +96,15 @@
       state: "present"
       regexp: "^%adm"
       line: "%adm ALL=(ALL) NOPASSWD: ALL"
+
+  - name: Update - IP '{{ vm.instance.hw_eth0.ipaddresses[0] }}'
+    community.mysql.mysql_query:
+      login_db: selfservice
+      login_user: "{{ mysql_username }}"
+      login_password: "{{ mysql_password }}"
+      login_host: "{{ mysql_dbhost }}"
+      login_port: "{{ mysql_port }}"
+      query: SELECT ssh_pub_key_1 FROM userdata AS ud INNER JOIN users AS u ON u.uid = ud.uid WHERE ud.adusername = "{{ username }}"
+    register: sql_query
+  
+  - debug: msg=sql_query

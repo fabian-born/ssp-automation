@@ -82,12 +82,6 @@
       append: yes
       uid: 1010
 
-#  - name: "Add authorized keys"
-#    delegate_to: '{{ vm.instance.hw_eth0.ipaddresses[0] }}'
-#    authorized_key:
-#      user: "{{ username }}"
-#      key: "{{ lookup('file', './files/'+ item + '.key.pub') }}"
-  
   - name: "Allow admin users to sudo without a password"
     become: yes
     delegate_to: '{{ vm.instance.hw_eth0.ipaddresses[0] }}'
@@ -97,7 +91,7 @@
       regexp: "^%adm"
       line: "%adm ALL=(ALL) NOPASSWD: ALL"
 
-  - name: Update - IP '{{ vm.instance.hw_eth0.ipaddresses[0] }}'
+  - name: Read SSH Key'
     community.mysql.mysql_query:
       login_db: selfservice
       login_user: "{{ mysql_username }}"
@@ -109,3 +103,9 @@
   
   - debug: 
     msg: "{{ sql_query.query_result[0][0].ssh_pub_key_1 }}"
+
+  - name: "Add authorized keys"
+    delegate_to: '{{ vm.instance.hw_eth0.ipaddresses[0] }}'
+    authorized_key:
+      user: "{{ username }}"
+      key: "{{ sql_query.query_result[0][0].ssh_pub_key_1 }}"

@@ -67,6 +67,6 @@
     become: yes
     delegate_to: '{{ vm.instance.hw_eth0.ipaddresses[0] }}'
     copy: 
-      src: ./motd.template-full
+      src: motd.template-full
       dest: /etc/motd
   

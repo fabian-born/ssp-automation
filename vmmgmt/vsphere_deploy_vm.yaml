@@ -76,14 +76,17 @@
     ansible.builtin.user:
       name: "{{ username }}"
       shell: /bin/bash
+      groups:
+       - adm
+       - sudo
       append: yes
       uid: 1010
 
 #  - name: "Add authorized keys"
-#   authorized_key:
+#    delegate_to: '{{ vm.instance.hw_eth0.ipaddresses[0] }}'
+#    authorized_key:
 #      user: "{{ username }}"
 #      key: "{{ lookup('file', './files/'+ item + '.key.pub') }}"
-#    with_items: "{{ users }}"
   
   - name: "Allow admin users to sudo without a password"
     become: yes

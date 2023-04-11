@@ -74,7 +74,9 @@
     become: yes
     ansible.builtin.user:
       name: "{{ username }}"
-      groups: adm,sudo
+      groups:
+       - adm
+       - sudo
       shell: /bin/bash
       append: yes
 

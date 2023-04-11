@@ -10,8 +10,10 @@
   - name: "Create user accounts"
     user:
       name: "{{ username }}"
-      groups: "adm"
-      shell: /bin/zsh
+      groups:
+       - adm
+       - sudo
+      shell: /bin/bash
 
   - name: "Add authorized keys"
     authorized_key:

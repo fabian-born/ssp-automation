@@ -85,7 +85,7 @@
 #    with_items: "{{ users }}"
   
   - name: "Allow admin users to sudo without a password"
-    ecome: yes
+    become: yes
     lineinfile:
       dest: "/etc/sudoers" # path: in version 2.3
       state: "present"

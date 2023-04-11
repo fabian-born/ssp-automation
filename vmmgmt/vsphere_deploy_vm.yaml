@@ -73,8 +73,9 @@
   - name: "Create user accounts"
     user:
       name: "{{ username }}"
-      groups: "adm"
+      groups: adm,sudo
       shell: /bin/bash
+      append: yes
 
 #  - name: "Add authorized keys"
 #   authorized_key:

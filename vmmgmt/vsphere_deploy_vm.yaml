@@ -101,9 +101,6 @@
       query: SELECT ssh_pub_key_1 FROM userdata AS ud INNER JOIN users AS u ON u.uid = ud.uid WHERE ud.adusername = "{{ username }}"
     register: sql_query
   
-  - debug: 
-    msg: "{{ sql_query.query_result[0][0].ssh_pub_key_1 }}"
-
   - name: "Add authorized keys"
     delegate_to: '{{ vm.instance.hw_eth0.ipaddresses[0] }}'
     authorized_key:

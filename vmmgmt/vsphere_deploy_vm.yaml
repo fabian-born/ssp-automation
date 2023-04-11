@@ -71,7 +71,8 @@
       dest: /etc/motd
   
   - name: "Create user accounts"
-    user:
+    become: yes
+    ansible.builtin.user:
       name: "{{ username }}"
       groups: adm,sudo
       shell: /bin/bash

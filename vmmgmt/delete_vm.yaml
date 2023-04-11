@@ -1,0 +1,31 @@
+---
+- name: Clone VMs
+  hosts: localhost
+  gather_facts: false
+  vars:
+    vcenter_hostname: vcsa.lab.epicshit.io
+    notes:  Automated VM creation test
+    folder: test
+    datastore: Datastore
+    datacenter: epicshit.io
+    vmtemplate: ubuntu-focal-cloudimg
+    customization_spec: "ubuntu-lab"
+    vmcluster: lab
+    state: absent
+    servers:
+      - fabianb-jump01
+  tasks:
+  - name: Clone multiple VMs from template
+    community.vmware.vmware_guest:
+      hostname: "{{ vcenter_host }}"
+      username: "{{ vcenter_username }}"
+      password: "{{ vcenter_password }}"
+      validate_certs: no
+      folder: "{{ folder }}"
+      template: "{{ vmtemplate }}"
+      name: "{{ item }}"
+      cluster: "{{ vmcluster }}"
+      datacenter: "{{ datacenter }}"
+      state: "{{ state }}"
+      force: true
+    with_items: "{{ servers }}"

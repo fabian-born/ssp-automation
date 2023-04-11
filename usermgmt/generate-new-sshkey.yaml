@@ -1,0 +1,40 @@
+---
+- name: Generate User Data
+  hosts: localhost 
+  gather_facts: false
+  tasks:
+  - name: Generate SSH Keys
+    community.crypto.openssh_keypair:
+      path: /tmp/id_ssh_dsa
+      type: ecdsa
+    register: sshkeys
+
+  - name: get content of remote file
+    slurp:
+      src: /tmp/id_ssh_dsa
+    register: remote_content_encoded
+
+  - name: decode remote content
+    set_fact:
+      remote_content: "{{remote_content_encoded.content | b64decode}}"
+ 
+  - name: Update - MySQL DataBase
+    community.mysql.mysql_query:
+      login_db: selfservice
+      login_user: "{{ mysql_username }}"
+      login_password: "{{ mysql_password }}"
+      login_host: "{{ mysql_dbhost }}"
+      login_port: "{{ mysql_port }}"
+      query: update userdata set ssh_pub_key_1 = "{{ sshkeys.public_key }}", ssh_priv_key_1 = "{{ remote_content_encoded.content }}" where uid = "{{ userid }}"
+    when: runlevel == "update"
+    register: sql_query
+
+  - name: Create - MySQL DataBase
+    community.mysql.mysql_query:
+      login_db: selfservice
+      login_user: "{{ mysql_username }}"
+      login_password: "{{ mysql_password }}"
+      login_host: "{{ mysql_dbhost }}"
+      login_port: "{{ mysql_port }}"
+      query: INSERT INTO userdata (udid, uid, adenabled, adusername,ssh_pub_key_1,ssh_priv_key_1) VALUES (NULL,"{{ userid }}",NULL,"{{ aduser }}","{{ sshkeys.public_key }}","{{ remote_content_encoded.content }}")
+    when: runlevel == "create"

@@ -1,0 +1,26 @@
+---
+- name: Generate User Data
+  hosts: localhost 
+  gather_facts: false
+
+  vars_files:
+    - ../basic-config.yaml
+
+  tasks: 
+  - name: "Create user accounts"
+    user:
+      name: "{{ username }}"
+      groups: "adm"
+      shell: /bin/zsh
+
+  - name: "Add authorized keys"
+    authorized_key:
+      user: "{{ username }}"
+      key: "{{ lookup('file', './files/'+ item + '.key.pub') }}"
+    with_items: "{{ users }}"
+  - name: "Allow admin users to sudo without a password"
+    lineinfile:
+      dest: "/etc/sudoers" # path: in version 2.3
+      state: "present"
+      regexp: "^%adm"
+      line: "%adm ALL=(ALL) NOPASSWD: ALL"

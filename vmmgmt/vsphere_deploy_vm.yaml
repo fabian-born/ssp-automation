@@ -1,0 +1,72 @@
+---
+- name: Clone VMs
+  hosts: localhost
+  gather_facts: false
+  vars:
+    notes:  Automated VM creation test
+    folder: test
+    datastore: Datastore
+    datacenter: epicshit.io
+    vmtemplate: ubuntu-focal-cloudimg
+    customization_spec: "ubuntu-lab"
+    vmcluster: lab
+    state: poweredon
+    servers: fabianb-jump01
+  tasks:
+  - name: Clone multiple VMs from template
+    community.vmware.vmware_guest:
+      hostname: "{{ vcenter_host }}"
+      username: "{{ vcenter_username }}"
+      password: "{{ vcenter_password }}"
+
+      validate_certs: no
+      folder: "{{ folder }}"
+      template: "{{ vmtemplate }}"
+      name: "{{ servers }}"
+      cluster: "{{ vmcluster }}"
+      datacenter: "{{ datacenter }}"
+      state: "{{ state }}"
+      customization_spec: "{{ customization_spec }}"
+      networks:
+        - name: "dvs-epicshit-69"
+      wait_for_ip_address: yes
+      wait_for_customization: true
+      disk:
+      - size_gb: "{{ disksize }}"
+        type: thin
+        autoselect_datastore: true
+      hardware:
+        memory_mb: "{{ ram }}"
+        num_cpus: "{{ cpu }}"
+
+      force: true
+      vapp_properties:
+        - id: hostname
+          value: "{{ servers }}"
+      customization:
+        hostname: "{{ servers }}"
+    register: vm
+
+
+  - name: Update - IP '{{ vm.instance.hw_eth0.ipaddresses[0] }}'
+    community.mysql.mysql_query:
+      login_db: selfservice
+      login_user: "{{ mysql_username }}"
+      login_password: "{{ mysql_password }}"
+      login_host: "{{ mysql_dbhost }}"
+      login_port: "{{ mysql_port }}"
+      query: update vms set ipaddress = "{{ vm.instance.hw_eth0.ipaddresses[0] }}", state = "{{ state }}" where hostname = "{{ servers }}"
+    register: sql_query
+
+  - name: Update apt-get repo and cache
+    become: yes
+    delegate_to: '{{ vm.instance.hw_eth0.ipaddresses[0] }}'
+    apt: update_cache=yes force_apt_get=yes cache_valid_time=3600
+
+  - name: Copy /etc/motd
+    become: yes
+    delegate_to: '{{ vm.instance.hw_eth0.ipaddresses[0] }}'
+    copy: 
+      src: ./motd.template-full
+      dest: /etc/motd
+  

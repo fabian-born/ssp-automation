@@ -1,0 +1,21 @@
+---
+- name: Create Userfolder
+  hosts: localhost
+  gather_facts: false
+  vars_files:
+    - ../basic-config.yaml
+  tasks:
+  - name: Create a VM folder on given datacenter
+    community.vmware.vcenter_folder:
+      hostname: "{{ vcenter_host }}"
+      username: "{{ vcenter_username }}"
+      password: "{{ vcenter_password }}"
+
+      validate_certs: no
+      datacenter: "{{ datacenter }}"
+      state: "{{ state }}"
+      folder_name: "{{ usercode }}"
+      folder_type: vm
+      parent_folder: "user-systems"
+    register: vm_folder_creation_result
+    delegate_to: localhost

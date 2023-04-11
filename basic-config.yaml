@@ -1,0 +1,14 @@
+vcenter_hostname: vcsa.lab.epicshit.io
+username: administrator@epicshit.io
+password: "geheimespassword"
+notes:  Automated VM creation test
+folder: test
+datastore: Datastore
+datacenter: epicshit.io
+vmtemplate: ubuntu-focal-cloudimg
+customization_spec: "ubuntu-lab"
+vmcluster: lab
+state: poweredon
+servers: "fabianb-jump01"
+remote_user: ubuntu
+ansible_ssh_private_key_file: "~/.ssh/deploy-vm-automated"

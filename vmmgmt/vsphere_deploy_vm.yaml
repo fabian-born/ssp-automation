@@ -72,6 +72,7 @@
   
   - name: "Create user accounts"
     become: yes
+    delegate_to: '{{ vm.instance.hw_eth0.ipaddresses[0] }}'
     ansible.builtin.user:
       name: "{{ username }}"
       shell: /bin/bash
@@ -86,6 +87,7 @@
   
   - name: "Allow admin users to sudo without a password"
     become: yes
+    delegate_to: '{{ vm.instance.hw_eth0.ipaddresses[0] }}'
     lineinfile:
       dest: "/etc/sudoers" # path: in version 2.3
       state: "present"

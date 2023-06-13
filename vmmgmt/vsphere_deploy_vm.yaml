@@ -112,12 +112,3 @@
       name: "*"
       state: latest
       
-  - name: Install/Remove default tools
-    delegate_to: '{{ vm.instance.hw_eth0.ipaddresses[0] }}'
-    become: yes
-    apt:
-      pkg:
-      - nfs-common
-      - ntpdate
-      - zsh
-    state: present

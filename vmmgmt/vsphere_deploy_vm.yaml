@@ -107,8 +107,4 @@
       user: "{{ username }}"
       key: "{{ sql_query.query_result[0][0].ssh_pub_key_1 }}"
 
-  - name: Update all packages to their latest version
-    ansible.builtin.apt:
-      name: "*"
-      state: latest
       

@@ -1,7 +1,7 @@
 ---
 - name: Generate User Data
-  hosts: localhost 
-  gather_facts: false
+  hosts: 172.28.0.50
+  gather_facts: true
   tasks:
   - name: Ensure user bob is created and use custom credentials to create the user
     community.windows.win_domain_user:

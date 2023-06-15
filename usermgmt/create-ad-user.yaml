@@ -1,23 +1,27 @@
-# tasks/configure_users.yml
-- name: configure active_directory employees
-  win_domain_user:
-    state: "{{ item.ensure | default(active_directory_ensure) }}"
-    name: "{{ item.name }}"
-    firstname: "{{ item.first_name }}"
-    surname: "{{ item.last_name }}"
-    password: "{{ item.password | default(active_directory_user_default_password) }}"
-    password_never_expires: "{{ active_directory_password_never_expires_enabled }}"
-    user_cannot_change_password: "{{ active_directory_user_cannot_change_password_enabled }}"
-    account_locked: "{{ item.locked_enabled | default(active_directory_account_locked_enabled) }}"
-    path: "{{ item.0.path + ',' + active_directory_user_base_ou }}"
-    update_password: "{{ item.update_password | default(active_directory_update_password) }}"
-    email: "{{ item.email | default(item.first_name | lower + '.' + item.last_name | lower + '@' + active_directory_email_domain) }}"
-    upn: "{{ item.name + '@' + active_directory_domain }}"
-    groups_action: "{{ item.groups_action | default(active_directory_group_action) }}"
-    attributes:
-      displayName: "{{ item.first_name | capitalize }} {{ item.last_name | capitalize }}"
-      description: "{{ item.description | default(omit) }}"
-      loginShell: "{{ item.login_shell | default(active_directory_login_shell) }}"
-    groups: "{{ item.groups | default(active_directory_default_group) | flatten }}"
-  with_items:
-    - "{{ active_directory_users | default({}) }}"
+---
+- name: Generate User Data
+  hosts: localhost 
+  gather_facts: false
+  tasks:
+  - name: configure active_directory employees
+    win_domain_user:
+      state: "{{ item.ensure | default(active_directory_ensure) }}"
+      name: "{{ item.name }}"
+      firstname: "{{ item.first_name }}"
+      surname: "{{ item.last_name }}"
+      password: "{{ item.password | default(active_directory_user_default_password) }}"
+      password_never_expires: "{{ active_directory_password_never_expires_enabled }}"
+      user_cannot_change_password: "{{ active_directory_user_cannot_change_password_enabled }}"
+      account_locked: "{{ item.locked_enabled | default(active_directory_account_locked_enabled) }}"
+      path: "{{ item.0.path + ',' + active_directory_user_base_ou }}"
+      update_password: "{{ item.update_password | default(active_directory_update_password) }}"
+      email: "{{ item.email | default(item.first_name | lower + '.' + item.last_name | lower + '@' + active_directory_email_domain) }}"
+      upn: "{{ item.name + '@' + active_directory_domain }}"
+      groups_action: "{{ item.groups_action | default(active_directory_group_action) }}"
+      attributes:
+        displayName: "{{ item.first_name | capitalize }} {{ item.last_name | capitalize }}"
+        description: "{{ item.description | default(omit) }}"
+        loginShell: "{{ item.login_shell | default(active_directory_login_shell) }}"
+      groups: "{{ item.groups | default(active_directory_default_group) | flatten }}"
+    with_items:
+      - "{{ active_directory_users | default({}) }}"

@@ -1,6 +1,6 @@
 ---
 - name: Generate User Data
-  hosts: 172.28.0.50
+  hosts: win-ad
   gather_facts: true
   tasks:
   - name: Ensure user bob is created and use custom credentials to create the user

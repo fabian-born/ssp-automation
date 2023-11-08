@@ -1,0 +1,10 @@
+vcenter_hostname: vcenter.host
+vcenter_username: administrator@vsphere.local
+vcenter_password: "passw0rd"
+
+notes:  Automated VM creation test
+
+datacenter: datacenter
+
+vm_second_network: "VM Network"
+vm_folder: "/path/to/vm" 

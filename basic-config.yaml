@@ -4,10 +4,10 @@ password: "geheimespassword"
 notes:  Automated VM creation test
 folder: test
 datastore: Datastore
-datacenter: epicshit.io
+datacenter: "Netapp-wdf"
 vmtemplate: ubuntu-focal-cloudimg
 customization_spec: "ubuntu-lab"
-vmcluster: lab
+vmcluster: HCI
 state: poweredon
 servers: "fabianb-jump01"
 remote_user: ubuntu

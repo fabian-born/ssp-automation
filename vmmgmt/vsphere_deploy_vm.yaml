@@ -6,10 +6,10 @@
     notes:  Automated VM creation test
     folder: test
     datastore: Datastore
-    datacenter: epicshit.io
+    datacenter: Netapp-wdf
     vmtemplate: ubuntu-focal-cloudimg
     customization_spec: "ubuntu-lab"
-    vmcluster: lab
+    vmcluster: HCI
     state: poweredon
     servers: fabianb-jump01
   tasks:
@@ -27,8 +27,8 @@
       datacenter: "{{ datacenter }}"
       state: "{{ state }}"
       customization_spec: "{{ customization_spec }}"
-      networks:
-        - name: "dvs-epicshit-69"
+      # networks:
+      #  - name: "dvs-epicshit-69"
       wait_for_ip_address: yes
       wait_for_customization: true
       disk:
@@ -107,17 +107,4 @@
       user: "{{ username }}"
       key: "{{ sql_query.query_result[0][0].ssh_pub_key_1 }}"
 
-  - name: Update all packages to their latest version
-    ansible.builtin.apt:
-      name: "*"
-      state: latest
       
-  - name: Install/Remove default tools
-    delegate_to: '{{ vm.instance.hw_eth0.ipaddresses[0] }}'
-    become: yes
-    apt:
-      pkg:
-      - nfs-common
-      - ntpdate
-      - zsh
-    state: present

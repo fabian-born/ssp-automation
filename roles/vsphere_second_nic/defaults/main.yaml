@@ -1,0 +1,8 @@
+---
+
+vsphere_vcenter_hostname: "{{ vcenter_hostname | default('vc1.company.corp') }}"
+vsphere_vcenter_username: "{{ vcenter_username | default('administrator@vpshere.local') }}"
+vsphere_vcenter_password: "{{ vcenter_password | default('passw0rd') }}"
+vsphere_datacenter: "{{ datacenter | default('datacenter') }}"
+vsphere_vm_folder: "{{ vm_folder | default('/vm/') }}"
+vsphere_second_network_name: "{{ vm_second_network | default('VM Network') }}"

@@ -1,0 +1,23 @@
+- name: test
+  vmware_vm_info:
+    hostname: '{{ vsphere_vcenter_hostname }}'
+    username: '{{ vsphere_vcenter_username }}'
+    password: '{{ vsphere_vcenter_password }}'
+    validate_certs: no
+    folder: '/{{ vsphere_datacenter }}/vm/{{ vsphere_vm_folder}}'
+    vm_type: vm
+  delegate_to: localhost
+  register: vminfo
+
+- name: SecondInterface
+  community.vmware.vmware_guest_network:
+    validate_certs: no
+    hostname: '{{ vsphere_vcenter_hostname }}'
+    username: '{{ vsphere_vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    name: "{{ item.guest_name }}"
+    network_name: "{{ vsphere_second_network_name }}"
+    state: present
+  loop: "{{ vminfo.virtual_machines }}"
+  loop_control:
+    loop_var: item
